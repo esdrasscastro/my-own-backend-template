@@ -1,0 +1,33 @@
+{
+  "name": "webprint-backend",
+  "version": "0.0.1",
+  "description": "Api destinada a fornecer dados para consumo pelo frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "clear;NODE_ENV=dev nodemon app",
+    "start:hml": "clear;NODE_ENV=hml nodemon app",
+    "start:prd": "clear;NODE_ENV=prd nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Castro, Esdras",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "glob": "^7.1.6",
+    "group-by": "0.0.1",
+    "mongoose": "^5.8.11",
+    "path": "^0.12.7",
+    "redis": "^2.8.0",
+    "restify": "^8.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.2"
+  }
+}
