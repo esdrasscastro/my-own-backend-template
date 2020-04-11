@@ -17,10 +17,12 @@
   "author": "Castro, Esdras",
   "license": "ISC",
   "dependencies": {
+    "btoa": "^1.2.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "glob": "^7.1.6",
     "group-by": "0.0.1",
+    "ioredis": "^4.16.2",
     "mongoose": "^5.8.11",
     "path": "^0.12.7",
     "redis": "^2.8.0",

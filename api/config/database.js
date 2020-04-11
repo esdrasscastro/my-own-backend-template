@@ -67,7 +67,7 @@ class Database {
 					);
 				});
 
-				this.connections[base.name] = connection;
+				this.connections[base.database] = connection;
 
 				return base;
 			});

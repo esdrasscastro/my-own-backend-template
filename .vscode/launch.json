@@ -15,6 +15,30 @@
             "env": {
                 "NODE_ENV": "dev"
             }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Staging",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/app.js",
+            "env": {
+                "NODE_ENV": "hml"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Production",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/app.js",
+            "env": {
+                "NODE_ENV": "prd"
+            }
         }
     ],
     "compounds": []
