@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'prd') {
 }
 
 // Allow only authenticated requests
-server.use(Authorized);
+// server.use(Authorized);
 
 // Allow simple access to look running server
 server.get('/', (req, res, next) => {

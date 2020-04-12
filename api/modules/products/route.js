@@ -5,4 +5,4 @@ const { full, server, useMethod } = require('../../config/provider').provider(__
 
 server.get(`${full}/list`, [], useMethod('list'));
 
-server.post(`${full}/save`, [middlewares.notEmptyBody], useMethod('save'));
+server.post(`${full}/save`, [middlewares.notEmptyBody, middlewares.Authorized], useMethod('save'));
