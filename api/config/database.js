@@ -1,78 +1,140 @@
-const config = require('.');
+const config = require(".");
 
 // Classe responsável por gerenciar a conexão com o banco de dados (MongoDB)
 class Database {
-	constructor() {
-		this.config = config;
-		this.connections = {};
-		this.mongoose = require('mongoose');
-		this.mongoose.Promise = Promise;
-	}
+  constructor() {
+    this.config = config;
+    this.connections = {};
+    this.mongoose = require("mongoose");
+    this.mongoose.Promise = Promise;
 
-	close(name) {
-		try {
-			Object.keys(this.connections).map(connection => {
-				if (!name || connection.toLowerCase() == name.toLowerCase()) {
-					this.connections[connection].close();
-					delete this.connections[connection];
-				}
+    // Default config for database
+    this.database = [
+      {
+        host: process.env.MONGODB_DATABASE_HOST,
+        port: process.env.MONGODB_DATABASE_PORT,
+        database: process.env.MONGODB_DATABASE_DBNAME,
+        options: {
+          useNewUrlParser: true,
+          autoIndex: false, // Don't build indexes
+          poolSize: 10, // Maintain up to 10 socket connections
+          // If not connected, return errors immediately rather than waiting for reconnect
+          bufferMaxEntries: 0,
+          useUnifiedTopology: true,
+        },
+      },
+    ];
+  }
 
-				return connection;
-			});
+  setDatabases(database) {
+    this.database = database;
+  }
 
-			return true;
-		} catch (error) {
-			return false;
-		}
-	}
+  close(name) {
+    try {
+      if (this.connections.length) {
+        if (name && this.connections[name]) {
+          this.disconnect(name);
+          console.log(`Conexão com banco de dados [${name}] foi encerrada.`);
+        } else {
+          this.connections.map((connection, name) => {
+            this.disconnect(name);
+            console.log(`Conexão com banco de dados [${name}] foi encerrada.`);
+          });
+        }
+      }
 
-	connect() {
-		const databases = JSON.parse(process.env.DATABASES_MONGODB);
+      return true;
+    } catch (error) {
+      console.error(
+        `Erro ao tentar fechar a conexão com banco de dados [${name}].`,
+        error
+      );
+      return false;
+    }
+  }
 
-		if (databases && databases.length) {
+  disconnect(name) {
+    try {
+      this.connections[name].close();
+      delete this.connections[name];
 
-			databases.map(base => {
-				if (this.connections[base.database]) return;
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 
-				let url = base.host;
-				
-				if(base.port && base.database) {
-					url = `${base.host}:${base.port}/${base.database}`;
-				}
+  connect() {
+    const databases = this.database;
 
-				const connection = this.mongoose.createConnection(url, base.options);
+    if (databases && databases.length) {
+      databases.map((base) => {
+        this.initDatabase(base);
+      });
+    }
+  }
 
-				connection.on('connecting', () => {
-					console.log(
-						`Tentando conectar no banco de dados [${base.database}] [${url}]...`,
-					);
-				});
+  showConnections() {
+    const keys = Object.keys(this.connections);
 
-				connection.on('connected', () => {
-					console.log(
-						`Conectado com sucesso no banco de dados [${base.database}] [${url}]`,
-					);
-				});
+    if (keys.length) {
+      if (keys.length === 1) {
+        console.debug(`Existe 1 conexão ativa com o banco de dados`);
+      } else {
+        console.debug(
+          `Existem ${keys.length} conexões ativas com o banco de dados`
+        );
+      }
 
-				connection.on('close', () => {
-					console.log(
-						`A conexão com o banco de dados foi fechada [${base.database}] [${url}]`,
-					);
-				});
+      keys.map((name) => {
+        console.debug(`- ${this.connections[name].id}: ${name}`);
+      });
+    } else {
+      console.debug("Não existem conexões com bancos de dados.");
+    }
+  }
 
-				connection.on('error', erro => {
-					console.error(
-						`Erro ao conectar com banco de dados [${base.database}] [${url}]`,
-						erro,
-					);
-				});
+  initDatabase(base) {
+    if (this.connections[base.database]) return;
 
-				this.connections[base.database] = connection;
+    let url = base.host;
 
-				return base;
-			});
-		}
-	}
+    if (base.port && base.database) {
+      url = `${base.host}:${base.port}/${base.database}`;
+    }
+
+    const connection = this.mongoose.createConnection(url, base.options);
+
+    connection.on("connecting", () => {
+      console.debug(
+        `Tentando conectar no banco de dados [${base.database}] [${url}]...`
+      );
+    });
+
+    connection.on("connected", () => {
+      console.debug(
+        `Conectado com sucesso no banco de dados [${base.database}] [${url}]`
+      );
+    });
+
+    connection.on("close", () => {
+      console.debug(
+        `A conexão com o banco de dados foi fechada [${base.database}] [${url}]`
+      );
+    });
+
+    connection.on("error", (erro) => {
+      console.error(
+        `Erro ao conectar com banco de dados [${base.database}] [${url}]`,
+        erro
+      );
+    });
+
+    this.connections[base.database] = connection;
+
+    return base;
+  }
 }
 
 module.exports = new Database();

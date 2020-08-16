@@ -12,11 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/esdrasscastro/onegraph-backend.git"
   },
   "author": "Castro, Esdras",
   "license": "ISC",
   "dependencies": {
+    "backend-framework": "^1.0.0",
     "btoa": "^1.2.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

@@ -1,51 +1,61 @@
-const server = require('./api/config/server');
-const {importModuleRoutes} = require('./api/config/provider');
-const database = require('./api/config/database');
-const redis = require('./api/config/redis');
-const {Authorized} = require('./api/middlewares');
+const server = require("./api/config/server");
+const { importModuleRoutes } = require("./api/config/provider");
+const Database = require("./api/config/database");
+const redis = require("./api/config/redis");
+//const {Authorized} = require('./api/middlewares');
 
 // Disable debugs in production enviroment, just allowing errors logs
-if (process.env.NODE_ENV === 'prd') {
+if (process.env.NODE_ENV === "prd") {
   console.debug = () => {};
   console.info = () => {};
   console.log = () => {};
+
+  Database.setDatabases([
+    {
+      host: process.env.PRD_MONGODB_DATABASE_HOST,
+      port: process.env.PRD_MONGODB_DATABASE_PORT,
+      database: process.env.PRD_MONGODB_DATABASE_DBNAME,
+    },
+  ]);
 }
 
 // Allow only authenticated requests
 // server.use(Authorized);
 
 // Allow simple access to look running server
-server.get('/', (req, res, next) => {
-	res.send(200, `${process.env.PROJECT_NAME} está rodando!`);
-	return next();
+server.get("/", (req, res, next) => {
+  res.send(200, `${process.env.PROJECT_NAME} está rodando!`);
+  return next();
 });
 
 server.listen(process.env.API_PORT, () => {
-  database.connect();
+  Database.connect();
   redis.configure();
 
-	importModuleRoutes();
+  importModuleRoutes();
 
-	console.debug(`A aplicação [${process.env.PROJECT_NAME}] está rodando em modo [${process.env.NODE_ENV}] na porta [${process.env.API_PORT}].`);
+  console.debug(
+    `A aplicação [${process.env.PROJECT_NAME}] está rodando em modo [${process.env.NODE_ENV}] na porta [${process.env.API_PORT}].`
+  );
 });
 
-server.on('close', () => {
-	console.debug('Aplicação:', 'O Servidor do restify foi finalizado.');
+server.on("close", () => {
+  console.debug("Aplicação:", "O Servidor do restify foi finalizado.");
 
-	// finaliza a conexão com o banco sempre que o restify for finalizado
-  if(database.close()) {
-    console.debug('-', 'Conexão com o banco de dados foi finalizada.');
+  // finaliza a conexão com o banco sempre que o restify for finalizado
+  if (Database.close()) {
+    console.debug("-", "Conexão com o banco de dados foi finalizada.");
   }
-  
-  if(redis && redis.client && redis.client.close()) {
-     console.debug('-', 'Conexão com o redis foi finalizada.');
+
+  if (redis && redis.client && redis.client.close()) {
+    console.debug("-", "Conexão com o redis foi finalizada.");
   }
 });
 
 // Finaliza a aplicação e todos os seus processos e conexões
-process.on('SIGINT', () => {
-  console.debug('');
-  console.debug('Aplicação encerrada.');
+process.on("SIGINT", () => {
+  console.debug("");
+  console.debug("-", "Aplicação encerrada.");
   process.exit();
 });
 
