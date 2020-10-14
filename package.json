@@ -25,6 +25,7 @@
     "group-by": "0.0.1",
     "ioredis": "^4.16.2",
     "mongoose": "^5.8.11",
+    "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "redis": "^2.8.0",
     "restify": "^8.5.1"
