@@ -1,5 +1,5 @@
 {
-  "name": "webprint-backend",
+  "name": "mockserver-backend",
   "version": "0.0.1",
   "description": "Api destinada a fornecer dados para consumo pelo frontend",
   "main": "index.js",
@@ -10,24 +10,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/esdrasscastro/onegraph-backend.git"
-  },
   "author": "Castro, Esdras",
   "license": "ISC",
   "dependencies": {
-    "backend-framework": "^1.0.0",
+    "backend-framework": "../backend-framework",
     "btoa": "^1.2.1",
-    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "glob": "^7.1.6",
     "group-by": "0.0.1",
-    "ioredis": "^4.16.2",
-    "mongoose": "^5.8.11",
-    "path": "^0.12.7",
-    "redis": "^2.8.0",
-    "restify": "^8.5.1"
+    "oi-log-message": "^1.0.8",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

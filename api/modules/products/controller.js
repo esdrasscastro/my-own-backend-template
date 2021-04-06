@@ -6,6 +6,8 @@ class Products {
     }
 
     async list(req, res, next) {
+        req.log.addScope(this, __filename);
+
         try {
             const products = await ProductsRepository.findAll();
 
@@ -18,7 +20,7 @@ class Products {
 
     async save(req, res, next) {
         try {
-            const {_id: productId, ...product} = req.body;
+            const { _id: productId, ...product } = req.body;
             let products = {};
             const now = Date.now();
 
