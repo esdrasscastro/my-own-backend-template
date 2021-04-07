@@ -4,9 +4,9 @@
   "description": "Api destinada a fornecer dados para consumo pelo frontend",
   "main": "index.js",
   "scripts": {
-    "start": "clear;NODE_ENV=dev nodemon app",
-    "start:hml": "clear;NODE_ENV=hml nodemon app",
-    "start:prd": "clear;NODE_ENV=prd nodemon app",
+    "start": "clear;NODE_ENV=development node app",
+    "start:hml": "clear;NODE_ENV=staging nodemon app",
+    "start:prd": "clear;NODE_ENV=production nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/js"
   },
@@ -17,6 +17,7 @@
     "btoa": "^1.2.1",
     "express": "^4.17.1",
     "group-by": "0.0.1",
+    "mongoose": "^5.12.3",
     "oi-log-message": "^1.0.8",
     "redis": "^2.8.0"
   },

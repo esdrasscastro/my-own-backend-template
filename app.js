@@ -1,9 +1,8 @@
 const { Server, Provider, Redis } = require('backend-framework');
-const { LogMessage } = require('oi-log-message');
 //const {Authorized} = require('./api/middlewares');
 
 // Disable debugs in production enviroment, just allowing errors logs
-if (process.env.NODE_ENV === "prd") {
+if (process.env.NODE_ENV === "production") {
   console.debug = () => { };
   console.info = () => { };
   console.log = () => { };
@@ -11,14 +10,6 @@ if (process.env.NODE_ENV === "prd") {
 
 // Allow only authenticated requests
 // Server.use(Authorized);
-
-Server.use((req, res, next) => {
-  const Log = new LogMessage();
-  Log.setRequest(req);
-  req.log = Log;
-
-  return next();
-})
 
 // Allow simple access to look running server
 Server.get("/", (req, res, next) => {
@@ -51,4 +42,5 @@ process.on("SIGINT", () => {
   process.exit();
 });
 
+Provider.initialize(Server);
 module.exports = Server;

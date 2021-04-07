@@ -1,7 +1,6 @@
 const middlewares = require("../../middlewares");
+const { Provider, Server } = require('backend-framework');
 
-const { full, server, useMethod } = require("../../config/provider").provider(
-  __filename
-);
+const { full, useMethod } = Provider.provider(__filename);
 
-server.post(`${full}/v1/`, [middlewares.notEmptyBody], useMethod("auth"));
+Server.post(`${full}/v1/`, [middlewares.notEmptyBody], useMethod("auth"));

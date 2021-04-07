@@ -1,4 +1,4 @@
-const database = require("../../../config/database");
+const database = require("backend-framework").MongoDB;
 const mongoose = require("mongoose");
 
 const connection = database.connections.onegraph || mongoose;

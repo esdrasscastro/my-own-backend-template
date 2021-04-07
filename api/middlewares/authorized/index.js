@@ -1,7 +1,8 @@
-const redis = require('../../config/redis');
+const { Redis } = require('backend-framework');
 const AuthorizationError = require('../../Exceptions/AuthorizationError');
 
 module.exports = async (req, res, next) => {
+    const redis = Redis;
     const context = "[Middleware] [Authorize]";
 
     try {
